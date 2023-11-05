@@ -1,10 +1,7 @@
-extern crate getopts;
-
 use std::env::args;
 use std::net::TcpStream;
 use std::os::fd::{AsRawFd, FromRawFd};
-use std::process::{Command, exit, Stdio};
-
+use std::process::{exit, Command, Stdio};
 use getopts::Options;
 
 struct R2shCtx {
