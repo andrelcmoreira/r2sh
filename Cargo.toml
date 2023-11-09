@@ -7,3 +7,11 @@ edition = "2021"
 
 [dependencies]
 getopts = "0.2"
+
+[[bin]]
+name = "r2sh-client"
+path = "src/client/main.rs"
+
+[[bin]]
+name = "r2sh-server"
+path = "src/server/main.rs"
