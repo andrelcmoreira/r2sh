@@ -1,6 +1,7 @@
 use std::env::args;
-use std::net::TcpListener;
+use std::net::{TcpListener, TcpStream};
 use std::process::exit;
+use std::time::Duration;
 use getopts::Options;
 
 fn show_usage(progname: &str, opts: Options) {
@@ -38,7 +39,7 @@ fn parse_args() -> Option<u16> {
     Some(port)
 }
 
-fn handle_client() {
+fn handle_client(stream: TcpStream) {
     // TODO(andrelcmoreira)
 }
 
@@ -49,11 +50,12 @@ fn run(port: u16) {
     };
 
     println!("[+] starting server...");
+    let (cli_sock, cli_addr) = sock.accept().unwrap();
+    println!("[+] client {} connected", cli_addr);
 
-    let conn = sock.accept().unwrap();
+    //cli_sock.set_read_timeout(Some(Duration::new(2, 0)));
 
-    println!("[+] client {} connected", conn.1);
-    handle_client();
+    handle_client(cli_sock);
 }
 
 fn main() {
