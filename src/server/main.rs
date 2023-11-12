@@ -1,4 +1,5 @@
 use std::env::args;
+use std::io::Read;
 use std::net::{TcpListener, TcpStream};
 use std::process::exit;
 use std::time::Duration;
@@ -10,7 +11,7 @@ fn show_usage(progname: &str, opts: Options) {
                           | '__|__) / __| '_ \\\n \
                           | |  / __/\\__ \\ | | |\n \
                           |_| |_____|___/_| |_|\n\
-                         (r)ust(r)everse(s)hell\n";
+                         (r)ust(r)everse(sh)ell\n";
     let brief = format!("{BANNER}\nusage: {progname} [OPTIONS]");
 
     print!("{}", opts.usage(&brief));
@@ -39,23 +40,41 @@ fn parse_args() -> Option<u16> {
     Some(port)
 }
 
-fn handle_client(stream: TcpStream) {
-    // TODO(andrelcmoreira)
+fn read_cli_buffer(mut stream: &TcpStream) {
+    let mut buf = [0; 1];
+
+    loop {
+        match stream.read_exact(&mut buf) {
+            Ok(_) => println!("{}", buf[0] as char),
+            Err(_) => break
+        }
+    };
+}
+
+fn handle_client(stream: &TcpStream) {
+    // read the prompt
+    read_cli_buffer(stream);
+
+    loop {
+        // TODO(andrelcmoreira)
+    }
 }
 
 fn run(port: u16) {
-    let sock = match TcpListener::bind(format!("127.0.0.1:{}", port)) {
+    println!("[+] starting server...");
+
+    let sock = match TcpListener::bind(("127.0.0.1", port)) {
         Ok(s) => s,
         Err(_) => panic!("[-] fail to bind the server to specified port!")
     };
 
-    println!("[+] starting server...");
     let (cli_sock, cli_addr) = sock.accept().unwrap();
-    println!("[+] client {} connected", cli_addr);
 
-    //cli_sock.set_read_timeout(Some(Duration::new(2, 0)));
-
-    handle_client(cli_sock);
+    println!("[+] client {} connected", cli_addr.ip());
+    match cli_sock.set_read_timeout(Some(Duration::new(1, 0))) {
+        Ok(_) => handle_client(&cli_sock),
+        Err(_) => {}
+    };
 }
 
 fn main() {
