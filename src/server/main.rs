@@ -60,10 +60,7 @@ fn handle_client(mut stream: &TcpStream) {
     read_cli_buffer(stream);
 
     loop {
-        match stdin().read_line(&mut buffer) {
-            Ok(_) => {},
-            Err(_) => break
-        };
+        stdin().read_line(&mut buffer).unwrap();
 
         // issue the command
         stream.write(buffer.as_bytes()).unwrap();
@@ -73,6 +70,7 @@ fn handle_client(mut stream: &TcpStream) {
 
         // read the response
         read_cli_buffer(stream);
+        buffer.clear();
     }
 }
 
@@ -90,9 +88,12 @@ fn run(port: u16) {
         println!("[+] client {} connected", cli_addr.ip());
         match cli_sock.set_read_timeout(Some(Duration::new(1, 0))) {
             Ok(_) => handle_client(&cli_sock),
-            Err(_) => break
+            Err(_) => {}
         };
+        println!("[+] client {} disconnected", cli_addr.ip());
     }
+
+    // println!("[+] exiting...");
 }
 
 fn main() {
