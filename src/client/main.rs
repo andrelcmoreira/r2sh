@@ -67,10 +67,8 @@ fn run(addr: String, port: u16) {
 }
 
 fn main() {
-    let (addr, port) = match parse_args() {
-        Some((a, p)) => (a, p),
+    match parse_args() {
+        Some((addr, port)) => run(addr, port),
         None => exit(1)
     };
-
-    run(addr, port);
 }

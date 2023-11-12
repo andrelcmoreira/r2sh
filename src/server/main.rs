@@ -35,7 +35,7 @@ fn parse_args() -> Option<u16> {
         return None
     }
 
-    let port: u16 = parsed_opts.opt_str("p").unwrap().parse().unwrap();
+    let port = parsed_opts.opt_str("p").unwrap().parse().unwrap();
 
     Some(port)
 }
@@ -54,7 +54,7 @@ fn read_cli_buffer(mut stream: &TcpStream) {
 }
 
 fn handle_client(mut stream: &TcpStream) {
-    let mut buffer: String = String::from("");
+    let mut buffer = String::new();
 
     // read the prompt
     read_cli_buffer(stream);
@@ -77,19 +77,17 @@ fn handle_client(mut stream: &TcpStream) {
 fn run(port: u16) {
     println!("[+] starting server...");
 
-    let sock = match TcpListener::bind(("127.0.0.1", port)) {
-        Ok(s) => s,
-        Err(_) => panic!("[-] fail to bind the server to specified port!")
-    };
+    let sock = TcpListener::bind(("127.0.0.1", port))
+        .expect("[-] fail to bind the server to specified port!");
 
     loop {
         let (cli_sock, cli_addr) = sock.accept().unwrap();
 
+        cli_sock.set_read_timeout(Some(Duration::new(1, 0)))
+            .expect("[-] fail to set the timeout for socket operations!");
+
         println!("[+] client {} connected", cli_addr.ip());
-        match cli_sock.set_read_timeout(Some(Duration::new(1, 0))) {
-            Ok(_) => handle_client(&cli_sock),
-            Err(_) => {}
-        };
+        handle_client(&cli_sock);
         println!("[+] client {} disconnected", cli_addr.ip());
     }
 
@@ -97,10 +95,8 @@ fn run(port: u16) {
 }
 
 fn main() {
-    let port = match parse_args() {
-        Some(port) => port,
+    match parse_args() {
+        Some(port) => run(port),
         None => exit(1)
     };
-
-    run(port);
 }
