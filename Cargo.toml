@@ -3,11 +3,6 @@ name = "r2sh"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-getopts = "0.2"
-
 [[bin]]
 name = "r2sh-client"
 path = "src/client.rs"
@@ -15,3 +10,6 @@ path = "src/client.rs"
 [[bin]]
 name = "r2sh-server"
 path = "src/server.rs"
+
+[dependencies]
+getopts = "0.2"
