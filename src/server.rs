@@ -60,20 +60,16 @@ fn read_cli_buffer(mut stream: &TcpStream) {
 fn handle_client(mut stream: &TcpStream) {
     let mut buffer = String::new();
 
-    // read the prompt
-    read_cli_buffer(stream);
-
     loop {
+        read_cli_buffer(stream);
+        // read user command
         stdin().read_line(&mut buffer).unwrap();
-
         // issue the command
         stream.write(buffer.as_bytes()).unwrap();
         if buffer.eq("exit\n") {
             break;
         }
 
-        // read the response
-        read_cli_buffer(stream);
         buffer.clear();
     }
 }
