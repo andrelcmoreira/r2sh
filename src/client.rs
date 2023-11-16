@@ -20,7 +20,7 @@ fn parse_args() -> Option<(String, u16)> {
     let mut opts = Options::new();
     let args: Vec<String> = args().collect();
 
-    opts.optopt("p", "port", "Specify the port of the server", "port");
+    opts.optopt("p", "port", "Specify the server port", "port");
     opts.optopt("s", "addr", "Specify the server address", "addr");
     opts.optflag("h", "help", "Show this message");
 
@@ -36,8 +36,8 @@ fn parse_args() -> Option<(String, u16)> {
         return None
     }
 
-    let addr: String = parsed_opts.opt_str("s").unwrap();
-    let port: u16 = parsed_opts.opt_str("p").unwrap().parse().unwrap();
+    let addr = parsed_opts.opt_str("s").unwrap();
+    let port = parsed_opts.opt_str("p").unwrap().parse().unwrap();
 
     Some((addr, port))
 }
