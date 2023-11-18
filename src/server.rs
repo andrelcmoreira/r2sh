@@ -1,5 +1,5 @@
 use std::env::args;
-use std::io::{stdin, stdout, ErrorKind, Read, Write};
+use std::io::{stdin, stdout, Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::process::exit;
 use std::time::Duration;
@@ -45,16 +45,13 @@ fn read_cli_buffer(mut stream: &TcpStream) {
 
     loop {
         match stream.read_exact(&mut buf) {
-            Ok(_) => print!("{}", buf[0] as char),
-            Err(e) => {
-                if e.kind() == ErrorKind::WouldBlock {
-                    break
-                }
-            }
+            Ok(_) => {
+                print!("{}", buf[0] as char);
+                stdout().flush().unwrap()
+            },
+            Err(_) => break
         }
     };
-
-    stdout().flush().unwrap();
 }
 
 fn handle_client(mut stream: &TcpStream) {
