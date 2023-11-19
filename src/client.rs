@@ -4,17 +4,8 @@ use std::os::fd::{AsRawFd, FromRawFd};
 use std::process::{exit, Command, Stdio};
 use getopts::Options;
 
-fn show_usage(progname: &str, opts: Options) {
-    const BANNER: &str = "      ____      _\n  \
-                           _ _|___ \\ ___| |__\n \
-                          | '__|__) / __| '_ \\\n \
-                          | |  / __/\\__ \\ | | |\n \
-                          |_| |_____|___/_| |_|\n\
-                         (r)ust(r)everse(sh)ell\n";
-    let brief = format!("{BANNER}\nusage: {progname} [OPTIONS]");
-
-    print!("{}", opts.usage(&brief));
-}
+mod common;
+use common::show_usage;
 
 fn parse_args() -> Option<(String, u16)> {
     let mut opts = Options::new();
