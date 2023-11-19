@@ -59,6 +59,7 @@ fn handle_client(mut stream: &TcpStream) {
 
     loop {
         read_cli_buffer(stream);
+
         // read user command
         stdin().read_line(&mut buffer).unwrap();
         // issue the command
@@ -87,8 +88,6 @@ fn run(port: u16) {
         handle_client(&cli_sock);
         println!("[+] client {} disconnected", cli_addr.ip());
     }
-
-    // println!("[+] exiting...");
 }
 
 fn main() {
