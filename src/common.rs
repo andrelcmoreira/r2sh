@@ -1,7 +1,7 @@
 use getopts::Options;
 
 pub fn show_usage(progname: &str, opts: Options) {
-    const BANNER: &str = "      ____      _\n  \
+    static BANNER: &str = "      ____      _\n  \
                            _ _|___ \\ ___| |__\n \
                           | '__|__) / __| '_ \\\n \
                           | |  / __/\\__ \\ | | |\n \
