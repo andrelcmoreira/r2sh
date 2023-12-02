@@ -5,7 +5,7 @@ use std::process::{exit, Command, Stdio};
 use getopts::Options;
 
 mod common;
-use common::show_usage;
+use common::{set_panic_handler, show_usage};
 
 fn parse_args() -> Option<(String, u16)> {
     let mut opts = Options::new();
@@ -58,6 +58,8 @@ fn run(addr: String, port: u16) {
 }
 
 fn main() {
+    set_panic_handler();
+
     match parse_args() {
         Some((addr, port)) => run(addr, port),
         None => exit(1)

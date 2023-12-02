@@ -6,7 +6,7 @@ use std::time::Duration;
 use getopts::Options;
 
 mod common;
-use common::show_usage;
+use common::{set_panic_handler, show_usage};
 
 fn parse_args() -> Option<u16> {
     let mut opts = Options::new();
@@ -82,6 +82,8 @@ fn run(port: u16) {
 }
 
 fn main() {
+    set_panic_handler();
+
     match parse_args() {
         Some(port) => run(port),
         None => exit(1)

@@ -1,3 +1,4 @@
+use std::panic::set_hook;
 use getopts::Options;
 
 pub fn show_usage(progname: &str, opts: Options) {
@@ -10,4 +11,12 @@ pub fn show_usage(progname: &str, opts: Options) {
     let brief = format!("{BANNER}\nusage: {progname} [OPTIONS]");
 
     print!("{}", opts.usage(&brief));
+}
+
+pub fn set_panic_handler() {
+    set_hook(Box::new(|info| {
+        if let Some(s) = info.payload().downcast_ref::<String>() {
+            println!("{}", s);
+        }
+    }));
 }
