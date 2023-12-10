@@ -7,7 +7,7 @@ pub fn show_usage(progname: &str, opts: Options) {
                           | '__|__) / __| '_ \\\n \
                           | |  / __/\\__ \\ | | |\n \
                           |_| |_____|___/_| |_|\n\
-                         (r)ust(r)everse(sh)ell\n";
+                         (r)everse(r)rust(sh)ell\n";
     let brief = format!("{BANNER}\nusage: {progname} [OPTIONS]");
 
     print!("{}", opts.usage(&brief));
