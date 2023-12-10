@@ -10,13 +10,13 @@ pub fn show_usage(progname: &str, opts: Options) {
                          (r)everse(r)rust(sh)ell\n";
     let brief = format!("{BANNER}\nusage: {progname} [OPTIONS]");
 
-    print!("{}", opts.usage(&brief));
+    print!("{}", opts.usage(&brief))
 }
 
 pub fn set_panic_handler() {
     set_hook(Box::new(|info| {
         if let Some(s) = info.payload().downcast_ref::<String>() {
-            println!("{}", s);
+            println!("{}", s)
         }
     }));
 }

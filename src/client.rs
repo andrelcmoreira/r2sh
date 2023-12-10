@@ -9,7 +9,7 @@ use common::{set_panic_handler, show_usage};
 
 fn parse_args() -> Option<(String, u16)> {
     let mut opts = Options::new();
-    let args: Vec<String> = args().collect();
+    let args = args().collect::<Vec<String>>();
 
     opts.optopt("p", "port", "Specify the server port", "port");
     opts.optopt("s", "addr", "Specify the server address", "addr");
@@ -27,10 +27,10 @@ fn parse_args() -> Option<(String, u16)> {
         return None
     }
 
-    let addr = parsed_opts.opt_str("s").unwrap();
-    let port = parsed_opts.opt_str("p").unwrap().parse().unwrap();
+    let addr = parsed_opts.opt_str("s")?;
+    let port = parsed_opts.opt_str("p")?;
 
-    Some((addr, port))
+    Some((addr, port.parse().unwrap()))
 }
 
 fn exec_shell(fd: i32) {
@@ -63,5 +63,5 @@ fn main() {
     match parse_args() {
         Some((addr, port)) => run(addr, port),
         None => exit(1)
-    };
+    }
 }

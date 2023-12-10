@@ -10,7 +10,7 @@ use common::{set_panic_handler, show_usage};
 
 fn parse_args() -> Option<u16> {
     let mut opts = Options::new();
-    let args: Vec<String> = args().collect();
+    let args = args().collect::<Vec<String>>();
 
     opts.optopt("p", "port", "Specify the port to bind the server to", "port");
     opts.optflag("h", "help", "Show this message");
@@ -26,9 +26,9 @@ fn parse_args() -> Option<u16> {
         return None
     }
 
-    let port = parsed_opts.opt_str("p").unwrap().parse().unwrap();
+    let port = parsed_opts.opt_str("p")?;
 
-    Some(port)
+    Some(port.parse().unwrap())
 }
 
 fn read_cli_buffer(mut stream: &TcpStream) {
@@ -42,7 +42,7 @@ fn read_cli_buffer(mut stream: &TcpStream) {
             },
             Err(_) => break
         }
-    };
+    }
 }
 
 fn handle_client(mut stream: &TcpStream) {
@@ -56,10 +56,10 @@ fn handle_client(mut stream: &TcpStream) {
         // issue the command
         stream.write(buffer.as_bytes()).unwrap();
         if buffer.eq("exit\n") {
-            break;
+            break
         }
 
-        buffer.clear();
+        buffer.clear()
     }
 }
 
@@ -77,7 +77,7 @@ fn run(port: u16) {
 
         println!("[+] client {} connected", cli_addr.ip());
         handle_client(&cli_sock);
-        println!("[+] client {} disconnected", cli_addr.ip());
+        println!("[+] client {} disconnected", cli_addr.ip())
     }
 }
 
@@ -87,5 +87,5 @@ fn main() {
     match parse_args() {
         Some(port) => run(port),
         None => exit(1)
-    };
+    }
 }
