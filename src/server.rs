@@ -2,11 +2,20 @@ use std::env::args;
 use std::io::{stdin, stdout, Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::process::exit;
+use std::panic::set_hook;
 use std::time::Duration;
 use getopts::Options;
 
 mod common;
-use common::{set_panic_handler, show_usage};
+use common::show_usage;
+
+fn set_panic_handler() {
+    set_hook(Box::new(|info| {
+        if let Some(s) = info.payload().downcast_ref::<String>() {
+            println!("{}", s)
+        }
+    }));
+}
 
 fn parse_args() -> Option<u16> {
     let mut opts = Options::new();
