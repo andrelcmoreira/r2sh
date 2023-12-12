@@ -16,13 +16,13 @@ fn parse_args() -> Option<u16> {
     opts.optflag("h", "help", "Show this message");
 
     if args.len() == 1 {
-        show_usage(args[0].as_str(), opts);
+        show_usage(&args[0], opts);
         return None
     }
 
     let parsed_opts = opts.parse(&args[1..]).unwrap();
     if ! parsed_opts.opt_present("p") || parsed_opts.opt_present("h") {
-        show_usage(args[0].as_str(), opts);
+        show_usage(&args[0], opts);
         return None
     }
 

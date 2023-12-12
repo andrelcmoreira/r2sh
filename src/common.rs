@@ -1,7 +1,7 @@
 use std::panic::set_hook;
 use getopts::Options;
 
-pub fn show_usage(progname: &str, opts: Options) {
+pub fn show_usage(progname: &String, opts: Options) {
     static BANNER: &str = "      ____      _\n  \
                            _ _|___ \\ ___| |__\n \
                           | '__|__) / __| '_ \\\n \
