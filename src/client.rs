@@ -4,8 +4,7 @@ use std::os::fd::{AsRawFd, FromRawFd};
 use std::process::{exit, Command, Stdio};
 use getopts::Options;
 
-mod common;
-use common::show_usage;
+use r2sh::show_usage;
 
 fn parse_args() -> Option<(String, u16)> {
     let mut opts = Options::new();

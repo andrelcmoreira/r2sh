@@ -6,8 +6,7 @@ use std::panic::set_hook;
 use std::time::Duration;
 use getopts::Options;
 
-mod common;
-use common::show_usage;
+use r2sh::show_usage;
 
 fn set_panic_handler() {
     set_hook(Box::new(|info| {
